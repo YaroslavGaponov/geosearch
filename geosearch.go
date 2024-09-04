@@ -2,7 +2,6 @@ package geosearch
 
 import (
 	"math/rand"
-	"sort"
 )
 
 type Point struct {
@@ -22,58 +21,54 @@ type Result struct {
 }
 
 type GeoSearch struct {
-	objects     []*Object
-	maxDistance float64
+	objects []*Object
 }
 
-func New(length int, maxDistance float64) GeoSearch {
+func New() GeoSearch {
 	return GeoSearch{
-		objects:     make([]*Object, 0, length),
-		maxDistance: maxDistance,
+		objects: make([]*Object, 0),
 	}
 }
 
 func (gs *GeoSearch) AddObject(obj *Object) {
 	if len(gs.objects) > 0 {
-		for _, obj2 := range gs.objects {
-			dist := Haversine(obj.Point, obj2.Point)
-			if dist <= gs.maxDistance {
-				obj.Neighbours = append(obj.Neighbours, obj2)
-				obj2.Neighbours = append(obj2.Neighbours, obj)
+		idx := 0
+		distance := Haversine(obj.Point, gs.objects[0].Point)
+		for i := 1; i < len(gs.objects); i++ {
+			dist := Haversine(obj.Point, gs.objects[i].Point)
+			if distance > dist {
+				idx = i
+				distance = dist
 			}
 		}
+		obj.Neighbours = append(obj.Neighbours, gs.objects[idx])
+		gs.objects[idx].Neighbours = append(gs.objects[idx].Neighbours, obj)
 	}
 	gs.objects = append(gs.objects, obj)
 }
 
-func (gs *GeoSearch) Search(point Point, attempt int) []Result {
+func (gs *GeoSearch) Search(point Point) Result {
 
-	result := make([]Result, 0)
-	skipped := make(map[string]struct{})
+	idx := rand.Intn(len(gs.objects))
 
-	for i := 0; i < attempt; i++ {
+	obj := gs.objects[idx]
+	distance := Haversine(point, obj.Point)
 
-		idx := rand.Intn(len(gs.objects))
-
-		list := []*Object{gs.objects[idx]}
-
-		for len(list) > 0 {
-			list2 := []*Object{}
-			for _, obj := range list {
-				if _, found := skipped[obj.Id]; !found {
-					distance := Haversine(point, obj.Point)
-					if distance <= gs.maxDistance {
-						result = append(result, Result{Object: obj, Distance: distance})
-						list2 = append(list2, obj.Neighbours...)
-					}
-					skipped[obj.Id] = struct{}{}
-				}
+	for {
+		found := false
+		for _, obj2 := range obj.Neighbours {
+			distance2 := Haversine(point, obj2.Point)
+			if distance2 < distance {
+				obj = obj2
+				distance = distance2
+				found = true
 			}
-			list = list2
 		}
+		if !found {
+			break
+		}
+
 	}
-	sort.Slice(result, func(i, j int) bool {
-		return result[i].Distance < result[j].Distance
-	})
-	return result
+	return Result{Object: obj, Distance: distance}
 }
+
