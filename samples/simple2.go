@@ -70,10 +70,15 @@ func main() {
 	printEnd("Done")
 	fmt.Println(counter, "points are loaded")
 
-	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
+	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 	result := gs.Search(me)
 	fmt.Println("Result", result.Object.Id, result.Distance, "km")
+
+	me2 := geosearch.Point{Latitude: 50.240440, Longitude: 28.621189}
+	result2 := gs.Search(me2)
+	fmt.Println("Result", result2.Object.Id, result2.Distance, "km")
+
 }
 
 func trim(s string) string {
