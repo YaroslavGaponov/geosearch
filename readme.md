@@ -4,6 +4,15 @@ Geosearch
 
 # Example #1
 
+Basic application for using the geosearch library
+
+## Run
+
+```sh
+cd samples/
+go run simple.go
+```
+
 ## Code
 
 ```go
@@ -46,6 +55,15 @@ Object Poznan, distance 36.28 km, took 21.992µs
 ```
 
 # Example #2
+
+Create a geosearch index of 47868 cities in memory and search by some geocoordinates
+
+## Run
+
+```sh
+cd samples/
+go run simple2.go
+```
 
 ## Code
 
