@@ -68,7 +68,7 @@ func main() {
 		counter++
 	}
 	printEnd("Done")
-	fmt.Println(counter, "points are loaded")
+	fmt.Println(counter, "points loaded")
 
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 

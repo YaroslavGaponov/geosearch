@@ -138,7 +138,7 @@ func main() {
 		counter++
 	}
 	printEnd("Done")
-	fmt.Println(counter, "points are loaded")
+	fmt.Println(counter, "points loaded")
 
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
@@ -166,7 +166,7 @@ func printEnd(s string) {
 ```sh
 Creating geo structure...
 Done                                               
-47868 points are loaded
+47868 points loaded
 Object Opalenica, distance 0.20 km, took 2.7209ms
 Object Opalenica, distance 0.20 km, took 785.347µs
 ```
