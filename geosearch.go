@@ -74,10 +74,17 @@ func (gs *GeoSearch) SearchOne(point Point) Result {
 
 func (gs *GeoSearch) Search(point Point) Result {
 	result := gs.SearchOne(point)
+	k := 1
 	for i := 1; i < gs.attemps; i++ {
 		result2 := gs.SearchOne(point)
-		if result.Distance > result2.Distance {
+		if result.Object.Id == result2.Object.Id {
+			k++
+		} else if result.Distance > result2.Distance {
 			result = result2
+			k = 1
+		}
+		if k > (gs.attemps >> 1) {
+			break
 		}
 	}
 	return result
