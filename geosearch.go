@@ -21,28 +21,26 @@ type Result struct {
 }
 
 type GeoSearch struct {
-	objects []*Object
+	objects                   []*Object
+	distanceBetweenNeighbours float64
 }
 
-func New() GeoSearch {
+func New(distanceBetweenNeighbours float64) GeoSearch {
 	return GeoSearch{
-		objects: make([]*Object, 0),
+		objects:                   make([]*Object, 0),
+		distanceBetweenNeighbours: distanceBetweenNeighbours,
 	}
 }
 
 func (gs *GeoSearch) AddObject(obj *Object) {
 	if len(gs.objects) > 0 {
-		idx := 0
-		distance := Haversine(obj.Point, gs.objects[0].Point)
-		for i := 1; i < len(gs.objects); i++ {
-			dist := Haversine(obj.Point, gs.objects[i].Point)
-			if distance > dist {
-				idx = i
-				distance = dist
+		for i := 0; i < len(gs.objects); i++ {
+			distance := Haversine(obj.Point, gs.objects[i].Point)
+			if distance <= gs.distanceBetweenNeighbours {
+				obj.Neighbours = append(obj.Neighbours, gs.objects[i])
+				gs.objects[i].Neighbours = append(gs.objects[i].Neighbours, obj)
 			}
 		}
-		obj.Neighbours = append(obj.Neighbours, gs.objects[idx])
-		gs.objects[idx].Neighbours = append(gs.objects[idx].Neighbours, obj)
 	}
 	gs.objects = append(gs.objects, obj)
 }
@@ -71,4 +69,3 @@ func (gs *GeoSearch) Search(point Point) Result {
 	}
 	return Result{Object: obj, Distance: distance}
 }
-
