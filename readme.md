@@ -29,16 +29,20 @@ func main() {
 
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
-	result := gs.Search(me)
-	fmt.Println(result.Object.Id, result.Distance, "km")
-}
+	result1 := gs.Search(me)
+	fmt.Printf("Object %s, distance %0.2f km, took %v\n",result1.Object.Id, result1.Distance, result1.Took)
 
+	result2 := gs.Search2(me)
+	fmt.Printf("Object %s, distance %0.2f km, took %v\n",result2.Object.Id, result2.Distance, result2.Took)
+
+}
 ```
 
 ## Result
 
 ```sh
-Poznan 36.28095488081731 km
+Object Poznan, distance 36.28 km, took 23.704µs
+Object Poznan, distance 36.28 km, took 21.992µs
 ```
 
 # Example #2
@@ -121,7 +125,10 @@ func main() {
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
 	result := gs.Search(me)
-	fmt.Println("Result", result.Object.Id, result.Distance, "km")
+	fmt.Printf("Object %s, distance %0.2f km, took %v\n", result.Object.Id, result.Distance, result.Took)
+
+	result2 := gs.Search2(me)
+	fmt.Printf("Object %s, distance %0.2f km, took %v\n", result2.Object.Id, result2.Distance, result2.Took)
 }
 
 func trim(s string) string {
@@ -142,5 +149,6 @@ func printEnd(s string) {
 Creating geo structure...
 Done                                               
 47868 points are loaded
-Result Opalenica 0.19742479602703403 km
+Object Opalenica, distance 0.20 km, took 2.7209ms
+Object Opalenica, distance 0.20 km, took 785.347µs
 ```
