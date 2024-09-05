@@ -21,9 +21,9 @@ func main() {
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
 	result1 := gs.Search(me)
-	fmt.Printf("Object %s, distance %0.2f km, took %v\n",result1.Object.Id, result1.Distance, result1.Took)
+	fmt.Printf("Object %s, distance %.2f km, took %v\n",result1.Object.Id, result1.Distance, result1.Took)
 
 	result2 := gs.Search2(me)
-	fmt.Printf("Object %s, distance %0.2f km, took %v\n",result2.Object.Id, result2.Distance, result2.Took)
+	fmt.Printf("Object %s, distance %.2f km, took %v\n",result2.Object.Id, result2.Distance, result2.Took)
 
 }
