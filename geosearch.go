@@ -22,12 +22,14 @@ type Result struct {
 
 type GeoSearch struct {
 	objects                   []*Object
+	attemps                   int
 	distanceBetweenNeighbours float64
 }
 
-func New(distanceBetweenNeighbours float64) GeoSearch {
+func New(attemps int, distanceBetweenNeighbours float64) GeoSearch {
 	return GeoSearch{
 		objects:                   make([]*Object, 0),
+		attemps:                   attemps,
 		distanceBetweenNeighbours: distanceBetweenNeighbours,
 	}
 }
@@ -45,7 +47,7 @@ func (gs *GeoSearch) AddObject(obj *Object) {
 	gs.objects = append(gs.objects, obj)
 }
 
-func (gs *GeoSearch) Search(point Point) Result {
+func (gs *GeoSearch) SearchOne(point Point) Result {
 
 	idx := rand.Intn(len(gs.objects))
 
@@ -68,4 +70,15 @@ func (gs *GeoSearch) Search(point Point) Result {
 
 	}
 	return Result{Object: obj, Distance: distance}
+}
+
+func (gs *GeoSearch) Search(point Point) Result {
+	result := gs.SearchOne(point)
+	for i := 1; i < gs.attemps; i++ {
+		result2 := gs.SearchOne(point)
+		if result.Distance > result2.Distance {
+			result = result2
+		}
+	}
+	return result
 }

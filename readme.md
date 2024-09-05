@@ -15,11 +15,12 @@ import (
 )
 
 const (
+	attemps = 5
 	distanceBetweenNeighbours = 2000
 )
 
 func main() {
-	gs := geosearch.New(distanceBetweenNeighbours)
+	gs := geosearch.New(attemps, distanceBetweenNeighbours)
 	gs.AddObject(&geosearch.Object{Id: "Paris", Point: geosearch.Point{Latitude: 48.858374, Longitude: 2.336046}})
 	gs.AddObject(&geosearch.Object{Id: "Berlin", Point: geosearch.Point{Latitude: 52.518430, Longitude: 13.370478}})
 	gs.AddObject(&geosearch.Object{Id: "Rome", Point: geosearch.Point{Latitude: 41.898199, Longitude: 12.511268}})
@@ -31,6 +32,7 @@ func main() {
 	result := gs.Search(me)
 	fmt.Println(result.Object.Id, result.Distance, "km")
 }
+
 ```
 
 ## Result
@@ -63,6 +65,7 @@ const (
 	ZIP_FILE = "./worldcities.zip"
 	CSV_FILE = "worldcities.csv"
 
+	attemps                   = 5
 	distanceBetweenNeighbours = 400
 )
 
@@ -91,7 +94,7 @@ func main() {
 	}
 	defer reader.Close()
 
-	gs := geosearch.New(distanceBetweenNeighbours)
+	gs := geosearch.New(attemps, distanceBetweenNeighbours)
 
 	fmt.Println("Creating geo structure...")
 	counter := 0
@@ -117,11 +120,8 @@ func main() {
 
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
-	fmt.Println("Result:")
-	for i := 0; i < 5; i++ {
-		result := gs.Search(me)
-		fmt.Println("attempt", i, result.Object.Id, result.Distance, "km")
-	}
+	result := gs.Search(me)
+	fmt.Println("Result", result.Object.Id, result.Distance, "km")
 }
 
 func trim(s string) string {
@@ -142,10 +142,5 @@ func printEnd(s string) {
 Creating geo structure...
 Done                                               
 47868 points are loaded
-Result:
-attempt 0 Opalenica 0.19742479602703403 km
-attempt 1 Opalenica 0.19742479602703403 km
-attempt 2 Opalenica 0.19742479602703403 km
-attempt 3 Mount Pearl Park 4793.351425097892 km
-attempt 4 Opalenica 0.19742479602703403 km
+Result Opalenica 0.19742479602703403 km
 ```

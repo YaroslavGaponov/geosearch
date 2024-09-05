@@ -6,11 +6,12 @@ import (
 )
 
 const (
+	attemps = 5
 	distanceBetweenNeighbours = 2000
 )
 
 func main() {
-	gs := geosearch.New(distanceBetweenNeighbours)
+	gs := geosearch.New(attemps, distanceBetweenNeighbours)
 	gs.AddObject(&geosearch.Object{Id: "Paris", Point: geosearch.Point{Latitude: 48.858374, Longitude: 2.336046}})
 	gs.AddObject(&geosearch.Object{Id: "Berlin", Point: geosearch.Point{Latitude: 52.518430, Longitude: 13.370478}})
 	gs.AddObject(&geosearch.Object{Id: "Rome", Point: geosearch.Point{Latitude: 41.898199, Longitude: 12.511268}})

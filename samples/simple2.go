@@ -17,6 +17,7 @@ const (
 	ZIP_FILE = "./worldcities.zip"
 	CSV_FILE = "worldcities.csv"
 
+	attemps                   = 5
 	distanceBetweenNeighbours = 400
 )
 
@@ -45,7 +46,7 @@ func main() {
 	}
 	defer reader.Close()
 
-	gs := geosearch.New(distanceBetweenNeighbours)
+	gs := geosearch.New(attemps, distanceBetweenNeighbours)
 
 	fmt.Println("Creating geo structure...")
 	counter := 0
@@ -71,11 +72,8 @@ func main() {
 
 	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
 
-	fmt.Println("Result:")
-	for i := 0; i < 5; i++ {
-		result := gs.Search(me)
-		fmt.Println("attempt", i, result.Object.Id, result.Distance, "km")
-	}
+	result := gs.Search(me)
+	fmt.Println("Result", result.Object.Id, result.Distance, "km")
 }
 
 func trim(s string) string {
