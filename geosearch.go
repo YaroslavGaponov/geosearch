@@ -79,27 +79,6 @@ func (gs *GeoSearch) SearchOne(point Point) Result {
 
 func (gs *GeoSearch) Search(point Point) Result {
 	start := time.Now()
-	result := gs.SearchOne(point)
-	k := 1
-	halfAttempts := gs.attemps >> 1
-	for i := 1; i < gs.attemps; i++ {
-		result2 := gs.SearchOne(point)
-		if result.Object.Id == result2.Object.Id {
-			k++
-			if k > halfAttempts {
-				break
-			}
-		} else if result.Distance > result2.Distance {
-			result = result2
-			k = 1
-		}
-	}
-	result.Took = time.Since(start)
-	return result
-}
-
-func (gs *GeoSearch) Search2(point Point) Result {
-	start := time.Now()
 	var wg sync.WaitGroup
 
 	results := make([]Result, gs.attemps)
@@ -111,7 +90,6 @@ func (gs *GeoSearch) Search2(point Point) Result {
 			results[i] = gs.SearchOne(point)
 		}(i)
 	}
-
 	wg.Wait()
 
 	result := results[0]
