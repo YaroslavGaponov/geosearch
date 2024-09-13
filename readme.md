@@ -6,6 +6,10 @@ Geosearch
 
 Basic application for using the geosearch library
 
+## Playground
+
+[Example](https://go.dev/play/p/5w6trGpMCq0)
+
 ## Run
 
 ```sh
