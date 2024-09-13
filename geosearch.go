@@ -1,8 +1,6 @@
 package geosearch
 
 import (
-	"math/rand"
-	"sync"
 	"time"
 )
 
@@ -25,14 +23,12 @@ type Result struct {
 
 type GeoSearch struct {
 	objects                   []*Object
-	attemps                   int
 	distanceBetweenNeighbours float64
 }
 
-func New(attemps int, distanceBetweenNeighbours float64) GeoSearch {
+func GeoSearchNew(distanceBetweenNeighbours float64) GeoSearch {
 	return GeoSearch{
 		objects:                   make([]*Object, 0),
-		attemps:                   attemps,
 		distanceBetweenNeighbours: distanceBetweenNeighbours,
 	}
 }
@@ -50,13 +46,10 @@ func (gs *GeoSearch) AddObject(obj *Object) {
 	gs.objects = append(gs.objects, obj)
 }
 
-func (gs *GeoSearch) SearchOne(point Point) Result {
+func (gs *GeoSearch) Search(point Point, obj *Object) Result {
 
 	start := time.Now()
 
-	idx := rand.Intn(len(gs.objects))
-
-	obj := gs.objects[idx]
 	distance := Haversine(point, obj.Point)
 
 	for {
@@ -75,30 +68,4 @@ func (gs *GeoSearch) SearchOne(point Point) Result {
 
 	}
 	return Result{Object: obj, Distance: distance, Took: time.Since(start)}
-}
-
-func (gs *GeoSearch) Search(point Point) Result {
-	start := time.Now()
-	var wg sync.WaitGroup
-
-	results := make([]Result, gs.attemps)
-
-	for i := 0; i < gs.attemps; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			results[i] = gs.SearchOne(point)
-		}(i)
-	}
-	wg.Wait()
-
-	result := results[0]
-	for i := 1; i < len(results); i++ {
-		if result.Distance > results[i].Distance {
-			result = results[i]
-		}
-	}
-
-	result.Took = time.Since(start)
-	return result
 }
