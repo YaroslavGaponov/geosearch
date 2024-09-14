@@ -17,7 +17,7 @@ func main() {
 	gs.AddObject(&geosearch.Object{Id: "Praha", Point: geosearch.Point{Latitude: 50.092603, Longitude: 14.444329}})
 	gs.AddObject(&geosearch.Object{Id: "Poznan", Point: geosearch.Point{Latitude: 52.426060, Longitude: 16.914685}})
 
-	me := geosearch.Point{Latitude: 52.308104, Longitude: 16.416461}
+	me := geosearch.Point{Latitude: 53.308104, Longitude: 14.416461}
 
 	result1 := gs.Search(me)
 	fmt.Printf("Object %s, distance %.2f km, took %v\n",result1.Object.Id, result1.Distance, result1.Took)
